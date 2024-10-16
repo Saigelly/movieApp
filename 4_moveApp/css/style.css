@@ -367,23 +367,31 @@ ul li {
 
 .container {}
 
-.news__feed {}
-
-.feed {
+.news__feed {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 20px;
+  justify-content: center;
 }
 
-.feed__item {
+
+.feed{
   display: flex;
   flex: 0 1 48%;
   min-height: 200px;
   padding: 8px;
   border: 1px solid #8c8c8c;
-  box-shadow: 0 0 5px #14a76c;
   gap: 10px;
+  transition: all .3s 0s ease-in-out;
 }
+
+.feed:hover{
+  box-shadow: 0 0 10px #14a76c;
+  scale: 1.04;
+
+}
+
+
 
 .feed__img {
   position: relative;
@@ -402,8 +410,8 @@ ul li {
 .feed__content {
   display: flex;
   flex-direction: column;
-  flex: 0 1 48%;
-  max-width: 100%;
+  flex: 1 1 auto;
+  
 }
 
 
@@ -412,24 +420,29 @@ ul li {
   font-weight: 700;
   color: #ffffff;
   margin-bottom: 20px;
-  max-width: 100%;
+  max-width: 330px;
 }
 
 .feed__description {
-  margin-bottom: 10px;
+  margin-bottom: auto;
   max-width: 100%;
+  max-width: 330px;
 }
 
 .feed__content .feed__link {
-  margin-bottom: 10px;
+  display: block;
+  margin: 10px 0;
   color: #ffe400;
+  max-width: 330px;
 }
 
 .feed__content .feed__link:hover {
   color: #928513;
-  max-width: 100%;
+  
 }
 
 .feed__published-info {
   align-self: flex-end;
+  max-width: 330px;
+  padding-top: 10px;
 }

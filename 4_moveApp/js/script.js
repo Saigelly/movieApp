@@ -27,7 +27,6 @@ async function getMovies(url) {
         showMovies(respData);
 
     } catch (err) {
-        window.location.replace('index.html');
         console.error('Произошла ошибка!', err);
     }
 };
