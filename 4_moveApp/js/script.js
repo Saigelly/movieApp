@@ -181,6 +181,7 @@ window.addEventListener('keydown', (e) => {
 
 
 
+
 //Реализация пагинации
 //Первая страница
 let currentPage = 1;
@@ -191,24 +192,85 @@ function displayPagination(pagesCount) {
     const ulEl = document.createElement('ul');
     ulEl.classList.add('pagination__list');
 
-    // Если запрос Популярных фильмов, то выводим все страницы
-    if (typeOfFetch === 'items') {
+    //Если страниц больше 5
+    if (pagesCount > 5) {
+        //Если это запрос API_URL_POPULAR
+        //то рисуем погинацию для всех доступных страниц по шаблону createArrDisplayPages
+        if (typeOfFetch === 'items') {
+            createArrDisplayPages(pagesCount, currentPage).forEach((page) => {
+                const liEl = displayPaginationBtn(page);
+                ulEl.appendChild(liEl);
+            });
+        }
+
+        //Если это запрос API_URL_SEARCH и общее количество страниц в ответе меньше 21
+        //то рисуем погинацию для всех доступных страниц по шаблону createArrDisplayPages
+        if (typeOfFetch === 'films' && pagesCount < 21) {
+            createArrDisplayPages(pagesCount, currentPage).forEach((page) => {
+                const liEl = displayPaginationBtn(page);
+                ulEl.appendChild(liEl);
+            });
+        }
+
+        //Если это запрос API_URL_SEARCH и общее количество страниц в ответе меньше 20
+        //то рисуем погинацию для всех доступных страниц по шаблону createArrDisplayPages
+        //но ограничиваемся 20-ью страницами из-за ограничения API
+        if (typeOfFetch === 'films' && pagesCount > 20) {
+            createArrDisplayPages(20, currentPage).forEach((page) => {
+                const liEl = displayPaginationBtn(page);
+                ulEl.appendChild(liEl);
+            });
+        }
+    }
+    //Если страниц меньше 6, то просто отрисовываем все что есть
+    if (pagesCount < 6) {
         for (let i = 0; i < pagesCount; i++) {
             const liEl = displayPaginationBtn(i + 1);
             ulEl.appendChild(liEl);
         }
     }
-    // Если запрос по ключевому слоу через поиск,
-    // то выводим 20 страниц из-за ограничения API
-    if (typeOfFetch === 'films') {
-        for (let i = 0; i < pagesCount && i < 20; i++) {
-            const liEl = displayPaginationBtn(i + 1);
-            ulEl.appendChild(liEl);
+    paginationEl.appendChild(ulEl);
+}
+
+
+
+
+//функция которая принимает общее количестов страниц по запросу и активную страницу
+//а возвращает массив со страницами которые нужно отрисовать в пагинации
+function createArrDisplayPages(totalPages, selectedPage) {
+    const pages = [];
+
+    // Добавляем начальные страницы (если выбранная страница > 3)
+    if (selectedPage > 3) {
+        pages.push(1);
+        pages.push('...');
+        // Добавляем выбранную страницу и страницы вокруг неё (по 1 в каждую сторону),
+        // только если это не последние 3 страницы
+        if (selectedPage < totalPages - 2)
+            for (let i = Math.max(1, selectedPage - 1); i <= Math.min(totalPages, selectedPage + 1); i++) {
+                pages.push(i);
+            }
+    }
+    // Добавляем начальные страницы (если выбранная страница < 4)
+    if (selectedPage < 4) {
+        for (i = 0; i < 4; i++) {
+            pages.push(i + 1);
+        }
+
+    }
+    // Добавляем конечные страницы (если выбранны не последние 3 страницы)
+    if (selectedPage < totalPages - 2) {
+        pages.push('...');
+        pages.push(totalPages);
+    }
+    // Добавляем конечные страницы (если выбранны последние 3 страницы)
+    if (selectedPage > totalPages - 3) {
+        for (i = 3; i >= 0; i--) {
+            pages.push(totalPages - i);
         }
     }
 
-    //рисуем полученый список
-    paginationEl.appendChild(ulEl);
+    return pages;
 }
 
 //Функция для заполнения пагинации страницами
@@ -221,7 +283,10 @@ function displayPaginationBtn(page) {
     if (currentPage === page) {
         liEl.classList.add('pagination__item_active');
     }
-
+    console.log(`отрисовываю ${page} страницу`);
+    if (page === '...') {
+        return liEl;
+    }
     //добавляем обработчик нажатия на страничку
     liEl.addEventListener('click', () => {
         currentPage = page;
