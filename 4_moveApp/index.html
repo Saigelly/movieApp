@@ -12,26 +12,43 @@
 </head>
 
 <body>
-    <header class="header">
-        <div class="container">
-            <div class="header__content">
-                <a href="index.html" class="header__logo">MovieApp</a>
-                <form>
-                    <input type="text" class="header__search" placeholder="Поиск">
-                </form>
-            </div>
-        </div>
-    </header>
-    <main class="main">
-        <section class="film-list">
+    <div class="wrapper">
+        <header class="header">
             <div class="container">
-                <div class="film-list__movies"></div>
-                <div class="modal">
+                <div class="header__content">
+                    <a href="index.html" class="header__logo">MovieApp</a>
+                    <nav class="menu">
+                        <ul class="menu__list">
+                            <li class="menu__item"><a href="index.html" class="menu__link">Популярное</a></li>
+                            <li class="menu__item"><a href="news.html" class="menu__link">Новости</a></li>
+                            <!-- <li class="menu__item"><a href="" class="menu__link"></a></li>
+                            <li class="menu__item"><a href="" class="menu__link"></a></li> -->
+                        </ul>
+                    </nav>
+                    <form>
+                        <input type="text" class="header__search" placeholder="Поиск">
+                    </form>
                 </div>
-                <div class="pagination"></div>
             </div>
-        </section>
-    </main>
+        </header>
+        <main class="main">
+            <section class="film-list">
+                <div class="container">
+                    <div class="film-list__movies"></div>
+                    <div class="modal">
+                    </div>
+                    <div class="pagination"></div>
+                </div>
+            </section>
+        </main>
+        <footer class="footer">
+            <div class="container">
+                <div class="foter__text">
+                    Это типо футер. by Saigely
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <script src="js/script.js"></script>
 </body>

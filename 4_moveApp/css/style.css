@@ -90,10 +90,17 @@ h6 {
   font-weight: 400;
 }
 
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 body {
-  background-color: #1a191f;
+  background-color: #272727;
   font-family: 'Open Sans', sans-serif;
-  color: #fff;
+
+  color: #8c8c8c;
 }
 
 .container {
@@ -110,18 +117,55 @@ body {
 
 }
 
-.header__logo {
-  font-size: 32px;
+.header__content .header__logo {
+  font-size: 46px;
+  margin-right: auto;
+  color: #ff652f;
+}
+
+.menu {
+
+  font-size: 18px;
+}
+
+.menu__list {
+  display: flex;
+}
+
+.menu__item {
+  margin-right: 20px;
+  border: 1px solid #8c8c8c;
+  padding: 0 15px;
+  text-align: center;
+  line-height: 50px;
+  height: 50px;
+  letter-spacing: 3px;
+  transition: .3s 0s all ease-in-out;
+  text-transform: uppercase;
+}
+
+.menu__item:hover {
+  background: #5b5b5b;
+  color: #000;
+}
+
+
+.menu__link {
+  display: block;
+  height: 100%;
+  width: 100%;
 
 }
 
 .header__search {
   padding: 8px;
-  border: 2px solid #1a191f;
+  border: 2px solid #272727;
   border-radius: 5px;
 }
 
-.film-list {}
+.main {
+  margin-bottom: auto;
+}
 
 .film-list__movies {
   display: flex;
@@ -171,11 +215,12 @@ body {
 .movie__title {
   font-size: 16px;
   margin-bottom: 5px;
+  color: #14a76c;
 }
 
 .movie__category {
   font-size: 14px;
-  color: #ffd80e;
+  color: #ffe400;
 }
 
 .movie__average {
@@ -188,7 +233,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #1a191f;
+  background-color: #272727;
   font-size: 14px;
 }
 
@@ -233,7 +278,7 @@ body {
   max-width: 600px;
   padding: 16px;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.5);
-  background-color: #1a191f;
+  background-color: #272727;
   color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -265,12 +310,12 @@ body {
   align-self: center;
   width: 170px;
   height: 38px;
-  border: 2px solid #1a191f;
+  border: 2px solid #272727;
   border-radius: 5px;
 }
 
 .modal__movie-site {
-  color: #ffd80e
+  color: #ffe400
 }
 
 ul li {
@@ -296,7 +341,8 @@ ul li {
   margin: 8px;
   cursor: pointer;
 }
-.pagination__item_ellipsis{
+
+.pagination__item_ellipsis {
   cursor: default;
 }
 
@@ -304,4 +350,86 @@ ul li {
 .pagination__item_active {
   font-weight: 800;
   color: gold;
+}
+
+.footer {
+  min-height: 50px;
+}
+
+.foter__text {
+  text-align: center;
+  line-height: 50px;
+}
+
+/* НОВОСТИ */
+
+.news {}
+
+.container {}
+
+.news__feed {}
+
+.feed {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.feed__item {
+  display: flex;
+  flex: 0 1 48%;
+  min-height: 200px;
+  padding: 8px;
+  border: 1px solid #8c8c8c;
+  box-shadow: 0 0 5px #14a76c;
+  gap: 10px;
+}
+
+.feed__img {
+  position: relative;
+  flex: 1 0 40%;
+}
+
+.feed__img img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.feed__content {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 48%;
+  max-width: 100%;
+}
+
+
+.feed__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 20px;
+  max-width: 100%;
+}
+
+.feed__description {
+  margin-bottom: 10px;
+  max-width: 100%;
+}
+
+.feed__content .feed__link {
+  margin-bottom: 10px;
+  color: #ffe400;
+}
+
+.feed__content .feed__link:hover {
+  color: #928513;
+  max-width: 100%;
+}
+
+.feed__published-info {
+  align-self: flex-end;
 }
