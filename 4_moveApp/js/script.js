@@ -22,9 +22,11 @@ async function getMovies(url, arrName) {
                 'X-API-KEY': API_KEY,
             },
         });
+
         const respData = await resp.json();
 
         showMovies(respData, arrName);
+
     } catch (err) {
         window.location.replace('index.html');
         console.error('Произошла ошибка!', err);
@@ -45,6 +47,11 @@ function getClassByRate(rate) {
 //Фнукция которая выводит фильмы 
 function showMovies(data, arrName) {
     const moviesEl = document.querySelector('.film-list__movies');
+
+
+    // console.log (`это данные которые пришли в showMovies - `);
+    // console.log (data);
+
 
     //очищаем предыдущие фильмы и пагинацию
     document.querySelector('.film-list__movies').innerHTML = '';
@@ -85,8 +92,15 @@ function showMovies(data, arrName) {
 
 
     //Вызываем функцию для отрисовки пагинации
-    displayPagination(data.totalPages || data.pagesCount);
-
+    //для API_URL_POPULAR
+    if (data.totalPages) {
+        displayPagination(data.totalPages);
+        return;
+    }
+    //для API_URL_SEARCH
+    data.pagesCount > 20
+        ? displayPagination(20)
+        : displayPagination(data.pagesCount)
 }
 
 
@@ -159,13 +173,11 @@ async function openModal(id) {
     }
 
 }
-
 // Функция дла закрытия попапа
 function closeModal() {
     modalEl.classList.remove('modal--show');
     document.body.classList.remove('stop-scrolling');
 }
-
 //Зыкрытие попапа при нажатие на пустую область
 window.addEventListener('click', (e) => {
     if (e.target === modalEl) {
@@ -180,48 +192,25 @@ window.addEventListener('keydown', (e) => {
 })
 
 
-
-
 //Реализация пагинации
 //Первая страница
 let currentPage = 1;
 
 //фунцкия отрисовки пагинации
 function displayPagination(pagesCount) {
+
     const paginationEl = document.querySelector('.pagination');
     const ulEl = document.createElement('ul');
     ulEl.classList.add('pagination__list');
 
     //Если страниц больше 5
     if (pagesCount > 5) {
-        //Если это запрос API_URL_POPULAR
-        //то рисуем погинацию для всех доступных страниц по шаблону createArrDisplayPages
-        if (typeOfFetch === 'items') {
-            createArrDisplayPages(pagesCount, currentPage).forEach((page) => {
-                const liEl = displayPaginationBtn(page);
-                ulEl.appendChild(liEl);
-            });
-        }
-
-        //Если это запрос API_URL_SEARCH и общее количество страниц в ответе меньше 21
-        //то рисуем погинацию для всех доступных страниц по шаблону createArrDisplayPages
-        if (typeOfFetch === 'films' && pagesCount < 21) {
-            createArrDisplayPages(pagesCount, currentPage).forEach((page) => {
-                const liEl = displayPaginationBtn(page);
-                ulEl.appendChild(liEl);
-            });
-        }
-
-        //Если это запрос API_URL_SEARCH и общее количество страниц в ответе меньше 20
-        //то рисуем погинацию для всех доступных страниц по шаблону createArrDisplayPages
-        //но ограничиваемся 20-ью страницами из-за ограничения API
-        if (typeOfFetch === 'films' && pagesCount > 20) {
-            createArrDisplayPages(20, currentPage).forEach((page) => {
-                const liEl = displayPaginationBtn(page);
-                ulEl.appendChild(liEl);
-            });
-        }
+        createArrDisplayPages(pagesCount, currentPage).forEach((page) => {
+            const liEl = displayPaginationBtn(page);
+            ulEl.appendChild(liEl);
+        });
     }
+
     //Если страниц меньше 6, то просто отрисовываем все что есть
     if (pagesCount < 6) {
         for (let i = 0; i < pagesCount; i++) {
@@ -256,7 +245,6 @@ function createArrDisplayPages(totalPages, selectedPage) {
         for (i = 0; i < 4; i++) {
             pages.push(i + 1);
         }
-
     }
     // Добавляем конечные страницы (если выбранны не последние 3 страницы)
     if (selectedPage < totalPages - 2) {
@@ -283,30 +271,23 @@ function displayPaginationBtn(page) {
     if (currentPage === page) {
         liEl.classList.add('pagination__item_active');
     }
-    console.log(`отрисовываю ${page} страницу`);
-    if (page === '...') {
-        return liEl;
-    }
-    //добавляем обработчик нажатия на страничку
-    liEl.addEventListener('click', () => {
-        currentPage = page;
 
-        // console.log(typeOfFetch);
-        // console.log(keywordSearch);
-        // console.log(API_URL_SEARCH);
-
-        // в зависимости от типа запроса? вызываем нужный API_URL
-        typeOfFetch === 'items'
-            ? getMovies(API_URL_POPULAR + currentPage, 'items')
-            : getMovies(API_URL_SEARCH + keywordSearch + '&page=' + currentPage, 'films');
-
-        //удаляем предыдущую активную страницу
-        let currentItemLi = document.querySelector('li.pagination__item_active');
-        currentItemLi.classList.remove('pagination__item_active');
-
-        //выделяем выбранную страницу
-        liEl.classList.add('pagination__item_active');
-    })
+    page !== '...'  
+        //добавляем обработчик нажатия на страничку
+        ? liEl.addEventListener('click', () => {
+            currentPage = page;
+            // в зависимости от типа запроса? вызываем нужный API_URL
+            typeOfFetch === 'items'
+                ? getMovies(API_URL_POPULAR + currentPage, 'items')
+                : getMovies(API_URL_SEARCH + keywordSearch + '&page=' + currentPage, 'films');
+            //удаляем предыдущую активную страницу
+            let currentItemLi = document.querySelector('li.pagination__item_active');
+            currentItemLi.classList.remove('pagination__item_active');
+            //выделяем выбранную страницу
+            liEl.classList.add('pagination__item_active');
+        })
+        //многоточию убираем курсор поинтер
+        : liEl.classList.add('pagination__item_ellipsis')
 
     return liEl;
 }

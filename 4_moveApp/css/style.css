@@ -296,6 +296,10 @@ ul li {
   margin: 8px;
   cursor: pointer;
 }
+.pagination__item_ellipsis{
+  cursor: default;
+}
+
 
 .pagination__item_active {
   font-weight: 800;
