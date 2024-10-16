@@ -14,16 +14,21 @@ getMovies(API_URL_POPULAR, 'items');
 
 //Функция которая получает фильмы от API
 async function getMovies(url, arrName) {
-    typeOfFetch = arrName;
-    const resp = await fetch(url, {
-        headers: {
-            'Content-Type': 'application/json',
-            'X-API-KEY': API_KEY,
-        },
-    });
-    const respData = await resp.json();
+    try {
+        typeOfFetch = arrName;
+        const resp = await fetch(url, {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-KEY': API_KEY,
+            },
+        });
+        const respData = await resp.json();
 
-    showMovies(respData, arrName);
+        showMovies(respData, arrName);
+    } catch (err) {
+        window.location.replace('index.html');
+        console.error('Произошла ошибка!', err);
+    }
 };
 
 //Функция которая окрашивает рамку оценки фильма
@@ -110,43 +115,49 @@ const modalEl = document.querySelector(".modal");
 
 //Функция для открытия модального окна
 async function openModal(id) {
-    const resp = await fetch(API_URL_MOVIE_DETAILS + id, {
-        headers: {
-            'Content-Type': 'application/json',
-            'X-API-KEY': API_KEY,
-        },
-    });
-    const respData = await resp.json();
+    try {
+        const resp = await fetch(API_URL_MOVIE_DETAILS + id, {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-KEY': API_KEY,
+            },
+        });
+        const respData = await resp.json();
 
-    modalEl.classList.add('modal--show');
-    document.body.classList.add('stop-scrolling');
-    
-    // рисовка попапа
-    modalEl.innerHTML = `
-                <div class="modal__card">
-                    <img src="${respData.posterUrl}" alt="${respData.nameRu}" class="modal__movie-backdrop">
-                        
-                    <h2 class="modal__title">
-                        <span class="modal__movie-title">${respData.nameRu},</span>
-                        <span class="modal__movie-release-year"> ${respData.year}</span>
-                    </h2>
-                    <ul class="modal__movie-info">
-                        <div class="loader"></div>
-                        <li class="modal__movie-genre"><span class='modal__movie-info_grey'>
-                            Жанр:</span> ${respData.genres.map((el) => `<span>${el.genre}</span> `)}
-                        </li>
-                        ${respData.filmLength ? `<li class="modal__movie-runtime"><span class='modal__movie-info_grey'>Время:</span> ${respData.filmLength} минут</li>` : ''}
-                        <li><span class='modal__movie-info_grey'>Сайт:</span> <a href="${respData.webUrl}" class="modal__movie-site">${respData.webUrl}</a></li>
-                        <li class="modal__movie-overview"><span class='modal__movie-info_grey'>Описание:</span> ${respData.description}</li>
-                    </ul>
-                    <button type="button" class="modal__button-close">Закрыть</button>
-                </div>
-            `
+        modalEl.classList.add('modal--show');
+        document.body.classList.add('stop-scrolling');
 
-    const btnClose = document.querySelector('.modal__button-close')
+        // рисовка попапа
+        modalEl.innerHTML = `
+                    <div class="modal__card">
+                        <img src="${respData.posterUrl}" alt="${respData.nameRu}" class="modal__movie-backdrop">
+                            
+                        <h2 class="modal__title">
+                            <span class="modal__movie-title">${respData.nameRu},</span>
+                            <span class="modal__movie-release-year"> ${respData.year}</span>
+                        </h2>
+                        <ul class="modal__movie-info">
+                            <div class="loader"></div>
+                            <li class="modal__movie-genre"><span class='modal__movie-info_grey'>
+                                Жанр:</span> ${respData.genres.map((el) => `<span>${el.genre}</span> `)}
+                            </li>
+                            ${respData.filmLength ? `<li class="modal__movie-runtime"><span class='modal__movie-info_grey'>Время:</span> ${respData.filmLength} минут</li>` : ''}
+                            <li><span class='modal__movie-info_grey'>Сайт:</span> <a href="${respData.webUrl}" class="modal__movie-site">${respData.webUrl}</a></li>
+                            <li class="modal__movie-overview"><span class='modal__movie-info_grey'>Описание:</span> ${respData.description}</li>
+                        </ul>
+                        <button type="button" class="modal__button-close">Закрыть</button>
+                    </div>
+                `
 
-    // Закрытие попапа по нажатию на кнопку
-    btnClose.addEventListener('click', () => closeModal());
+        const btnClose = document.querySelector('.modal__button-close')
+
+        // Закрытие попапа по нажатию на кнопку
+        btnClose.addEventListener('click', () => closeModal());
+    } catch (err) {
+        console.error('Произошла ошибка!', err.message);
+        closeModal();
+    }
+
 }
 
 // Функция дла закрытия попапа
@@ -179,7 +190,7 @@ function displayPagination(pagesCount) {
     const paginationEl = document.querySelector('.pagination');
     const ulEl = document.createElement('ul');
     ulEl.classList.add('pagination__list');
-    
+
     // Если запрос Популярных фильмов, то выводим все страницы
     if (typeOfFetch === 'items') {
         for (let i = 0; i < pagesCount; i++) {
