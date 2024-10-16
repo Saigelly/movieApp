@@ -10,12 +10,11 @@ let typeOfFetch = 'items';
 //переменная для сохранения настоящего ключевого слова
 let keywordSearch = '';
 
-getMovies(API_URL_POPULAR, 'items');
+getMovies(API_URL_POPULAR);
 
 //Функция которая получает фильмы от API
-async function getMovies(url, arrName) {
+async function getMovies(url) {
     try {
-        typeOfFetch = arrName;
         const resp = await fetch(url, {
             headers: {
                 'Content-Type': 'application/json',
@@ -25,7 +24,7 @@ async function getMovies(url, arrName) {
 
         const respData = await resp.json();
 
-        showMovies(respData, arrName);
+        showMovies(respData);
 
     } catch (err) {
         window.location.replace('index.html');
@@ -45,7 +44,7 @@ function getClassByRate(rate) {
 }
 
 //Фнукция которая выводит фильмы 
-function showMovies(data, arrName) {
+function showMovies(data) {
     const moviesEl = document.querySelector('.film-list__movies');
 
 
@@ -59,10 +58,17 @@ function showMovies(data, arrName) {
 
     //У запроса популярных фильмоф свойство с рэтингом называется ratingKinopoisk
     //У поиска по ключевым словам свойство рэйтинга называется rating
+    let arrName = 'items';
     let nameRate = 'ratingKinopoisk';
-    if (arrName === 'films') {
+    
+
+    if (data.films){
+        arrName = 'films';
         nameRate = 'rating';
     }
+    
+    //Определяем тип запроса
+    typeOfFetch = arrName;
 
     //Создаем карточки фильмов на основе полученных данных
     data[arrName].forEach((movie) => {
@@ -115,7 +121,7 @@ form.addEventListener('submit', (e) => {
     const apiSearchUrl = `${API_URL_SEARCH}${search.value}`;
 
     if (search.value) {
-        getMovies(apiSearchUrl, 'films');
+        getMovies(apiSearchUrl);
         keywordSearch = search.value;
         currentPage = 1;
         search.value = '';
@@ -276,16 +282,20 @@ function displayPaginationBtn(page) {
         //добавляем обработчик нажатия на страничку
         ? liEl.addEventListener('click', () => {
             currentPage = page;
+
             // в зависимости от типа запроса? вызываем нужный API_URL
             typeOfFetch === 'items'
-                ? getMovies(API_URL_POPULAR + currentPage, 'items')
-                : getMovies(API_URL_SEARCH + keywordSearch + '&page=' + currentPage, 'films');
+                ? getMovies(API_URL_POPULAR + currentPage)
+                : getMovies(API_URL_SEARCH + keywordSearch + '&page=' + currentPage)
+
             //удаляем предыдущую активную страницу
             let currentItemLi = document.querySelector('li.pagination__item_active');
             currentItemLi.classList.remove('pagination__item_active');
+
             //выделяем выбранную страницу
             liEl.classList.add('pagination__item_active');
         })
+
         //многоточию убираем курсор поинтер
         : liEl.classList.add('pagination__item_ellipsis')
 
