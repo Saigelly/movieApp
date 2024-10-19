@@ -90,6 +90,8 @@ h6 {
   font-weight: 400;
 }
 
+/* --------------- */
+
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -154,7 +156,6 @@ body {
   display: block;
   height: 100%;
   width: 100%;
-
 }
 
 .header__search {
@@ -362,11 +363,6 @@ ul li {
 }
 
 /* НОВОСТИ */
-
-.news {}
-
-.container {}
-
 .news__feed {
   display: flex;
   flex-wrap: wrap;
